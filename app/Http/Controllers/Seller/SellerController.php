@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Seller;
 use App\Seller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\Seller\HttpException;
+
 
 class SellerController extends ApiController
 {

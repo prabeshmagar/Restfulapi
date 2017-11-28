@@ -89,7 +89,7 @@ class UserController extends ApiController
         if($request->has('email')&& $user != $request->email)
         {
             $user->verified = User::UNVERIFIED_USER;
-            $user->verfification_token = User::generateVerificationCode();
+            $user->verfication_token = User::generateVerificationCode();
             $user->email = $request->email;
         }
 
@@ -127,4 +127,18 @@ class UserController extends ApiController
 
         return $this->showOne($user);
     }
-}
+    
+
+
+    //account verification
+    public function verify($token)
+        {
+            $user =  User::where('verification_token',$token)->firstOrFail();
+
+            $user->update([
+                'verified'=>'1'
+            ]);
+                $user->save();
+            return "verified";
+        }
+        }

@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Seller;
+
 use App\User;
 use App\Seller;
-use Illuminate\Http\Request;
 use App\Product;
+use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\HttpException;

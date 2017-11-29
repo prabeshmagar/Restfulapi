@@ -4,9 +4,10 @@ namespace App\Http\Controllers\category;
 
 use App\category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
-use Illuminate\Support\Collection;
+
 
 class CategoryController extends ApiController
 {

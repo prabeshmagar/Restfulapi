@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\ApiController;
 use App\User;
+use App\Mail\UserCreated;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\ApiController;
+
 
 class UserController extends ApiController
 {
@@ -89,7 +92,7 @@ class UserController extends ApiController
         if($request->has('email')&& $user != $request->email)
         {
             $user->verified = User::UNVERIFIED_USER;
-            $user->verfication_token = User::generateVerificationCode();
+            $user->verification_token = User::generateVerificationCode();
             $user->email = $request->email;
         }
 
@@ -130,15 +133,29 @@ class UserController extends ApiController
     
 
 
-    //account verification
+    //account verification email
     public function verify($token)
         {
             $user =  User::where('verification_token',$token)->firstOrFail();
+            $user->verified = User::VERIFIED_USER;
+            $user->verification_token = null;
+            $user->save();
+            
+            return ('The account has been verified successfully');
+        }
 
-            $user->update([
-                'verified'=>'1'
-            ]);
-                $user->save();
-            return "verified";
+        //Resend the verification mail to user if requested
+        public function resend(User $user)
+        {
+            if($user->isVerified())
+            {
+                return  $this->errorResponse('This user is already verified',409);
+            }
+
+            retry(5,function() use($user){
+                Mail::to($user)->send(new UserCreated($user));
+                },100); 
+
+            return 'The verification email has been resend';
         }
         }

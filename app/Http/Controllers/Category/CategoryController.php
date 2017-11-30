@@ -18,7 +18,7 @@ class CategoryController extends ApiController
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::paginate();
 
         return  $this->showAll($categories);
     }

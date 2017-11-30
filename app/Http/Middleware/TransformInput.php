@@ -22,6 +22,7 @@ class TransformInput
         {
             $transformedInput[$transformer::originalAttribute($input)] = $value;
         }
+        
         $request->replace($transformedInput);
         $response = $next($request);
 

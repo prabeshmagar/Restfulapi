@@ -4,8 +4,9 @@ namespace App\Exceptions;
 
 use Exception;
 use App\Traits\ApiResponser;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -112,7 +113,11 @@ class Handler extends ExceptionHandler
                     return $this->errorResponse('Cannot remove this resource permanently. It is related to another resource',409);
                 }
          }
-       
+
+         if($exception instanceof TokenMismatchException)
+         {
+             return redirect()->back()->withInput($request->input());
+                     }
          //if debug is true
          if(config('app.debug'))
             {
@@ -134,6 +139,10 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
         {
+            if($this->isFrontend($request))
+            {
+                return redirect()->guest('login');
+            }
             return $this->errorResponse('unauthenticated',401);
         
         }
@@ -143,8 +152,22 @@ class Handler extends ExceptionHandler
     protected function convertValidationExceptionToResponse(ValidationException $e, $request)
         {  
             $errors = $e->validator->errors()->getMessages();
+
+            if($this->isFrontend($request)){
+                return $request->ajax()? response()->json($error,422) : redirect()->back()
+                ->withInput($request->input())
+                ->withErrors($errors);
+            }
             return $this->errorResponse($errors,422);
             
+        }
+
+        //when requested for web version
+
+        private function isFrontend($request)
+        {
+            return $request->acceptsHtml() && collect($request->route()->middleware())->contains('web');
+
         }
 
 

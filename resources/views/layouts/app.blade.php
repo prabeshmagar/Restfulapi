@@ -37,6 +37,11 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         &nbsp;
+                        @if(Auth::check())
+                        <li><a href={{route('personal-tokens')}}>My Tokens</a></li>
+                        <li><a href={{route('personal-clients')}}>My Clients</a></li>
+                        <li><a href={{route('authorized-clients')}}>Authorized</a></li>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->

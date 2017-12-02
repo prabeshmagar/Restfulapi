@@ -10,6 +10,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.5.*",
         "laravel/homestead": "^6.5",
+        "laravel/passport": "^4.0",
         "laravel/tinker": "~1.0",
         "spatie/laravel-fractal": "^5.3"
     },
